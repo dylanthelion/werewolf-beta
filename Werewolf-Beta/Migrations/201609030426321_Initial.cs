@@ -7,16 +7,29 @@ namespace Werewolf_Beta.Migrations
     {
         public override void Up()
         {
-            DropIndex("dbo.Users", new[] { "NemesisID" });
-            AlterColumn("dbo.Users", "NemesisID", c => c.Int());
-            CreateIndex("dbo.Users", "NemesisID");
+            CreateTable(
+                "dbo.Users",
+                c => new
+                {
+                    ID = c.Int(nullable: false, identity: true),
+                    UserName = c.String(nullable: false, maxLength: 20),
+                    FBLoginToken = c.String(),
+                    GoogleLoginToken = c.String(),
+                    Password = c.String(nullable: false, maxLength: 32),
+                    NemesisID = c.Int(),
+                    Experience = c.Int(nullable: false),
+                    Level = c.Int(nullable: false),
+                    Tokens = c.Int(nullable: false),
+                })
+                .PrimaryKey(t => t.ID)
+                .ForeignKey("dbo.Users", t => t.NemesisID)
+                .Index(t => t.UserName, unique: true)
+                .Index(t => t.NemesisID);
         }
         
         public override void Down()
         {
-            DropIndex("dbo.Users", new[] { "NemesisID" });
-            AlterColumn("dbo.Users", "NemesisID", c => c.Int(nullable: false));
-            CreateIndex("dbo.Users", "NemesisID");
+            
         }
     }
 }
