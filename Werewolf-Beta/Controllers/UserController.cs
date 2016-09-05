@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
@@ -63,6 +64,52 @@ namespace Werewolf_Beta.Controllers
             return new HttpResponseMessage
             {
                 Content = new StringContent(JArray.FromObject(new List<User>() { user }).ToString(), Encoding.UTF8, "application/json")
+            };
+        }
+
+        [System.Web.Http.HttpPut]
+        public HttpResponseMessage EditUser([FromBody] User newUser)
+        {
+            Tuple<bool, HttpResponseMessage> validator = ControllerCRUDValidators.ValidateEditUser(newUser);
+            if(!validator.Item1)
+            {
+                return validator.Item2;
+            }
+            User oldUser = db.AllUsers.Find(newUser.ID);
+            if(newUser.Experience != 0)
+            {
+                oldUser.Experience = newUser.Experience;
+            }
+            if (newUser.FBLoginToken != null)
+            {
+                oldUser.FBLoginToken = newUser.FBLoginToken;
+            }
+            if (newUser.GoogleLoginToken != null)
+            {
+                oldUser.GoogleLoginToken = newUser.GoogleLoginToken;
+            }
+            if (newUser.Level != 0)
+            {
+                oldUser.Level = newUser.Level;
+            }
+            if (newUser.NemesisID != 0)
+            {
+                oldUser.NemesisID = newUser.NemesisID;
+            }
+            if (newUser.Tokens != 0)
+            {
+                oldUser.Tokens = newUser.Tokens;
+            }
+            if (newUser.UserName != null)
+            {
+                oldUser.UserName = newUser.UserName;
+            }
+            db.Entry(oldUser).State = EntityState.Modified;
+            db.SaveChanges();
+
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(JArray.FromObject(new List<String>() { String.Format("User successfully updated! Your user ID: {0}", oldUser.ID) }).ToString(), Encoding.UTF8, "application/json")
             };
         }
     }
