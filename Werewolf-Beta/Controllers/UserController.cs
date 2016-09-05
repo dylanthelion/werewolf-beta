@@ -40,5 +40,30 @@ namespace Werewolf_Beta.Controllers
                 Content = new StringContent(JArray.FromObject(new List<String>() { String.Format("User successfully created! Your user ID: {0}", id) }).ToString(), Encoding.UTF8, "application/json")
             };
         }
+
+        [System.Web.Http.HttpGet]
+        public HttpResponseMessage GetUser(string password, int id)
+        {
+            User user = db.AllUsers.Find(id);
+            if(user == null)
+            {
+                return new HttpResponseMessage
+                {
+                    Content = new StringContent(JArray.FromObject(new List<String>() { "Invalid user id" }).ToString(), Encoding.UTF8, "application/json")
+                };
+            }
+            if(user.Password != password)
+            {
+                return new HttpResponseMessage
+                {
+                    Content = new StringContent(JArray.FromObject(new List<String>() { "Invalid password" }).ToString(), Encoding.UTF8, "application/json")
+                };
+            }
+
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(JArray.FromObject(new List<User>() { user }).ToString(), Encoding.UTF8, "application/json")
+            };
+        }
     }
 }
