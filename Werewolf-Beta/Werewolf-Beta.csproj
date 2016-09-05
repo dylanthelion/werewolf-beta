@@ -205,9 +205,11 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\ControllerCRUDValidators.cs" />
     <Compile Include="Migrations\201609030426321_Initial.cs" />
     <Compile Include="Migrations\201609030426321_Initial.Designer.cs">
       <DependentUpon>201609030426321_Initial.cs</DependentUpon>
@@ -256,7 +258,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\" />
-    <Folder Include="Controllers\" />
     <Folder Include="Providers\" />
     <Folder Include="Results\" />
   </ItemGroup>

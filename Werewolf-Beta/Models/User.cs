@@ -34,6 +34,11 @@ namespace Werewolf_Beta.Models
         public int Level { get; set; }
         [DefaultValue(0)]
         public int Tokens { get; set; }
+
+        public override string ToString()
+        {
+            return String.Format("Name: {0} Password: {1}", UserName, Password);
+        }
     }
 
     public class WerewolfContext : DbContext
