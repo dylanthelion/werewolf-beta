@@ -112,5 +112,24 @@ namespace Werewolf_Beta.Controllers
                 Content = new StringContent(JArray.FromObject(new List<String>() { String.Format("User successfully updated! Your user ID: {0}", oldUser.ID) }).ToString(), Encoding.UTF8, "application/json")
             };
         }
+
+        [System.Web.Http.HttpDelete]
+        public HttpResponseMessage DeleteUser(int id, string password, string username)
+        {
+            Tuple<bool, HttpResponseMessage> validator = ControllerCRUDValidators.ValidateNameAndPassword(id, username, password);
+            if(!validator.Item1)
+            {
+                return validator.Item2;
+            }
+            User deleted = db.AllUsers.Find(id);
+            db.AllUsers.Remove(deleted);
+            db.Entry(deleted).State = EntityState.Deleted;
+            db.SaveChanges();
+
+            return new HttpResponseMessage
+            {
+                Content = new StringContent(JArray.FromObject(new List<String>() { "User successfully deleted!" }).ToString(), Encoding.UTF8, "application/json")
+            };
+        }
     }
 }

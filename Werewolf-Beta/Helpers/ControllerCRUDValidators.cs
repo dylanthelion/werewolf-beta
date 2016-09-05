@@ -101,5 +101,33 @@ namespace Werewolf_Beta.Helpers
             }
             return new Tuple<bool, HttpResponseMessage>(true, new HttpResponseMessage());
         }
+
+        public static Tuple<bool, HttpResponseMessage> ValidateNameAndPassword(int id, string name, string password)
+        {
+            WerewolfContext db = new WerewolfContext();
+            User checkUser = db.AllUsers.Find(id);
+            if(checkUser == null)
+            {
+                return new Tuple<bool, HttpResponseMessage>(false, new HttpResponseMessage()
+                {
+                    Content = new StringContent(JArray.FromObject(new List<String>() { "Invalid user ID" }).ToString(), Encoding.UTF8, "application/json")
+                });
+            }
+            if(checkUser.Password != password)
+            {
+                return new Tuple<bool, HttpResponseMessage>(false, new HttpResponseMessage()
+                {
+                    Content = new StringContent(JArray.FromObject(new List<String>() { "Invalid password" }).ToString(), Encoding.UTF8, "application/json")
+                });
+            }
+            if(checkUser.UserName != name)
+            {
+                return new Tuple<bool, HttpResponseMessage>(false, new HttpResponseMessage()
+                {
+                    Content = new StringContent(JArray.FromObject(new List<String>() { "Invalid username" }).ToString(), Encoding.UTF8, "application/json")
+                });
+            }
+            return new Tuple<bool, HttpResponseMessage>(true, new HttpResponseMessage());
+        }
     }
 }
